@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 
-namespace AJ.LightingGroupTag.Revit
+namespace AJ.LightingGroupTag.Services.LightingGroupTag
 {
     /// <summary>
-    /// Utility methods for querying and interacting with Revit elements and parameters.
+    /// Service responsible for querying lighting fixture types, type parameters, and view geometry.
     /// </summary>
-    public static class RevitElementService
+    public static class FixtureTypeService
     {
         public static List<FamilySymbol> GetLightingFixtureTypes(Document doc)
         {
@@ -45,7 +45,6 @@ namespace AJ.LightingGroupTag.Revit
                     return p.AsString().Trim();
                 }
 
-                // Fallback to type name if Type Mark parameter is not filled
                 return fi.Symbol.Name;
             }
 
@@ -67,7 +66,6 @@ namespace AJ.LightingGroupTag.Revit
                 return lp.Point;
             }
 
-            // Fallback to center of bounding box in current view
             BoundingBoxXYZ bbox = elem.get_BoundingBox(null);
             if (bbox != null)
             {

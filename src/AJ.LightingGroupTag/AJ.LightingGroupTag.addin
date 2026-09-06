@@ -12,7 +12,7 @@
     <Name>AJ Lighting Group Tag Command</Name>
     <Assembly>AJ.LightingGroupTag.dll</Assembly>
     <AddInId>9BF2DF66-7F1D-417A-B14C-E8B1E343A11C</AddInId>
-    <FullClassName>AJ.LightingGroupTag.Commands.LaunchLightingGroupTagCommand</FullClassName>
+    <FullClassName>AJ.LightingGroupTag.Commands.LightingGroupTagCommand</FullClassName>
     <Text>AJ Lighting Group Tag</Text>
     <Description>Creates multi-reference lighting fixture group tags with single visible leader</Description>
     <VisibilityMode>AlwaysVisible</VisibilityMode>

@@ -35,7 +35,7 @@ namespace AJ.LightingGroupTag.Models
             Instance = instance;
             TypeName = instance.Symbol?.Name ?? "Unknown Type";
             TypeMark = string.IsNullOrWhiteSpace(typeMark) ? TypeName : typeMark;
-            DisplayName = $"Fixture {index:D2} (Id: {instance.Id.Value})";
+            DisplayName = $"Fixture {index:D3}";
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

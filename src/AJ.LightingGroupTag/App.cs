@@ -45,12 +45,12 @@ namespace AJ.LightingGroupTag
 
                 string thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
 
-                // Create PushButton
+                // Create PushButton pointing to LightingGroupTagCommand
                 var buttonData = new PushButtonData(
                     "cmdAJLightingGroupTag",
                     "Lighting\nGroup Tag",
                     thisAssemblyPath,
-                    "AJ.LightingGroupTag.Commands.LaunchLightingGroupTagCommand"
+                    "AJ.LightingGroupTag.Commands.LightingGroupTagCommand"
                 )
                 {
                     ToolTip = "Creates multi-reference lighting group tags with single representative leader in Revit 2026.",

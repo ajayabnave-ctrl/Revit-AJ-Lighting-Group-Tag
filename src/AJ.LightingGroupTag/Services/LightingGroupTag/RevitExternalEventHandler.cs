@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using Autodesk.Revit.UI;
 
-namespace AJ.LightingGroupTag.Revit
+namespace AJ.LightingGroupTag.Services.LightingGroupTag
 {
     /// <summary>
     /// Thread-safe external event handler to marshal calls from modeless WPF UI onto the Revit API main thread.
@@ -35,9 +35,6 @@ namespace AJ.LightingGroupTag.Revit
             }
         }
 
-        public string GetName()
-        {
-            return "AJ Lighting Group Tag Event Handler";
-        }
+        public string GetName() => "AJ Lighting Group Tag Event Handler";
     }
 }

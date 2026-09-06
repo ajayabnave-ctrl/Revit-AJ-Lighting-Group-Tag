@@ -3,12 +3,27 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using AJ.LightingGroupTag.Models;
 
-namespace AJ.LightingGroupTag.Validation
+namespace AJ.LightingGroupTag.Services.LightingGroupTag
 {
+    public class ValidationResult
+    {
+        public bool IsValid { get; }
+        public string ErrorMessage { get; }
+
+        private ValidationResult(bool isValid, string errorMessage)
+        {
+            IsValid = isValid;
+            ErrorMessage = errorMessage;
+        }
+
+        public static ValidationResult Success() => new ValidationResult(true, string.Empty);
+        public static ValidationResult Failure(string message) => new ValidationResult(false, message);
+    }
+
     /// <summary>
-    /// Validates fixture selection and representative element rules according to specification.
+    /// Service responsible for validating fixture selection and grouping rules.
     /// </summary>
-    public static class FixtureGroupValidator
+    public static class FixtureValidationService
     {
         public static ValidationResult Validate(LightingGroup group)
         {
@@ -54,7 +69,7 @@ namespace AJ.LightingGroupTag.Validation
                 {
                     expectedSymbolId = f.Symbol.Id;
                 }
-                else if (f.Symbol.Id != expectedSymbolId)
+                else if (f.Symbol.Id.Value != expectedSymbolId.Value)
                 {
                     return ValidationResult.Failure($"Mixed fixture types detected: Element {f.Id.Value} ({f.Symbol.Name}) does not match the group type ({fixtures[0].Symbol?.Name}). All fixtures in a group must have the same Family Type.");
                 }

@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Autodesk.Revit.DB;
 using AJ.LightingGroupTag.Models;
-using AJ.LightingGroupTag.Revit;
-using AJ.LightingGroupTag.Validation;
 
-namespace AJ.LightingGroupTag.Tags
+namespace AJ.LightingGroupTag.Services.LightingGroupTag
 {
     /// <summary>
     /// Service for creating and configuring multi-reference lighting group tags.
     /// Strictly locates 'AJ_Lighting_Group_Tag' and configures a single visible leader
     /// attached to the representative fixture with Free End condition.
     /// </summary>
-    public class LightingGroupTagService
+    public class LightingTagService
     {
         public const string ExpectedTagFamilyName = "AJ_Lighting_Group_Tag";
 
@@ -25,7 +23,6 @@ namespace AJ.LightingGroupTag.Tags
             if (doc == null)
                 return null;
 
-            // Search in Lighting Fixture Tags and Multi-Category Tags
             var tagSymbols = new FilteredElementCollector(doc)
                 .OfClass(typeof(FamilySymbol))
                 .Cast<FamilySymbol>()
@@ -54,7 +51,7 @@ namespace AJ.LightingGroupTag.Tags
                 throw new ArgumentNullException(nameof(group));
 
             // Validate the group before doing any Revit modifications
-            var validation = FixtureGroupValidator.Validate(group);
+            var validation = FixtureValidationService.Validate(group);
             if (!validation.IsValid)
             {
                 throw new InvalidOperationException($"Cannot create tag: {validation.ErrorMessage}");
@@ -84,8 +81,7 @@ namespace AJ.LightingGroupTag.Tags
                 }
 
                 // Step 2: Compute positions
-                XYZ repPoint = RevitElementService.GetElementLocationPoint(representative);
-                // Offset tag head for clear visibility and clean drafting layout
+                XYZ repPoint = FixtureTypeService.GetElementLocationPoint(representative);
                 XYZ headPoint = repPoint + new XYZ(2.0, 2.0, 0.0);
 
                 // Step 3: Create tag initially against representative
@@ -122,18 +118,17 @@ namespace AJ.LightingGroupTag.Tags
                     tag.LeaderEndCondition = LeaderEndCondition.Free;
                 }
 
-                // Anchor the leader directly at representative fixture
                 try
                 {
                     tag.SetLeaderEnd(repRef, repPoint);
                 }
                 catch
                 {
-                    // If geometry doesn't permit setting endpoint directly, Free mode still allows user movement
+                    // Fallback handled by Revit
                 }
 
-                // Step 6: ONE LEADER Logic (Section 10)
-                // Critical: Only the representative fixture has the visible leader; all others are hidden!
+                // Step 6: ONE LEADER Logic
+                // Only the representative fixture has the visible leader; all others are hidden!
                 IList<Reference> taggedRefs = tag.GetTaggedReferences();
                 foreach (Reference r in taggedRefs)
                 {
@@ -144,7 +139,7 @@ namespace AJ.LightingGroupTag.Tags
                     }
                     catch
                     {
-                        // Some Revit versions or tag types may handle individual leader visibility via presentation mode
+                        // Presentation mode handling
                     }
                 }
 

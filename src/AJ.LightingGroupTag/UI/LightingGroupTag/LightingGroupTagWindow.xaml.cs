@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AJ.LightingGroupTag.UI
+namespace AJ.LightingGroupTag.UI.LightingGroupTag
 {
     /// <summary>
     /// Interaction logic for LightingGroupTagWindow.xaml

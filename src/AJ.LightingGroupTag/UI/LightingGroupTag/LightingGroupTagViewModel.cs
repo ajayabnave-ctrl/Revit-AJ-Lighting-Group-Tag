@@ -9,12 +9,9 @@ using System.Windows.Input;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using AJ.LightingGroupTag.Models;
-using AJ.LightingGroupTag.Revit;
-using AJ.LightingGroupTag.Selection;
-using AJ.LightingGroupTag.Tags;
-using AJ.LightingGroupTag.Validation;
+using AJ.LightingGroupTag.Services.LightingGroupTag;
 
-namespace AJ.LightingGroupTag.UI
+namespace AJ.LightingGroupTag.UI.LightingGroupTag
 {
     public class LightingGroupTagViewModel : INotifyPropertyChanged
     {
@@ -68,7 +65,7 @@ namespace AJ.LightingGroupTag.UI
 
         public int SelectedFixtureCount => SelectedFixtures.Count;
 
-        // Group Information readouts (Section 2 & 3)
+        // Group Information readouts
         public string TypeMarkText
         {
             get
@@ -76,7 +73,7 @@ namespace AJ.LightingGroupTag.UI
                 if (_selectedRepresentativeItem != null)
                     return _selectedRepresentativeItem.TypeMark;
                 if (_selectedFixtureType != null)
-                    return RevitElementService.GetTypeMark(_selectedFixtureType);
+                    return FixtureTypeService.GetTypeMark(_selectedFixtureType);
                 return "-";
             }
         }
@@ -166,7 +163,7 @@ namespace AJ.LightingGroupTag.UI
         public void LoadInitialData(Document doc)
         {
             AvailableTypes.Clear();
-            var types = RevitElementService.GetLightingFixtureTypes(doc);
+            var types = FixtureTypeService.GetLightingFixtureTypes(doc);
             foreach (var t in types)
             {
                 AvailableTypes.Add(t);
@@ -231,12 +228,11 @@ namespace AJ.LightingGroupTag.UI
                         for (int i = 0; i < picked.Count; i++)
                         {
                             var fi = picked[i];
-                            string tm = RevitElementService.GetTypeMark(fi);
+                            string tm = FixtureTypeService.GetTypeMark(fi);
                             var item = new FixtureItemViewModel(fi, i + 1, tm);
                             SelectedFixtures.Add(item);
                         }
 
-                        // Synchronize fixture type if needed
                         var firstSymbol = picked[0].Symbol;
                         if (firstSymbol != null)
                         {
@@ -251,7 +247,7 @@ namespace AJ.LightingGroupTag.UI
                         // Default representative to first picked fixture
                         SelectedRepresentativeItem = SelectedFixtures[0];
 
-                        StatusMessage = $"Selected {picked.Count} fixture(s). Representative automatically set to Fixture 01.";
+                        StatusMessage = $"Selected {picked.Count} fixture(s). Representative set to Fixture 001.";
                         IsError = false;
                     }
                     else
@@ -295,7 +291,7 @@ namespace AJ.LightingGroupTag.UI
                 }
 
                 var allowed = SelectedFixtures.Select(vm => vm.Instance).ToList();
-                var rep = RepresentativeSelectionService.PickRepresentative(uidoc, allowed);
+                var rep = FixtureSelectionService.PickRepresentative(uidoc, allowed);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -353,7 +349,7 @@ namespace AJ.LightingGroupTag.UI
                 var doc = uidoc.Document;
                 var view = doc.ActiveView;
 
-                if (!RevitElementService.IsValidViewForTagging(view))
+                if (!FixtureTypeService.IsValidViewForTagging(view))
                 {
                     ShowError($"Current view '{view.Name}' is not a valid 2D/3D plan or section view for tagging.");
                     return;
@@ -372,7 +368,7 @@ namespace AJ.LightingGroupTag.UI
                         View = view
                     };
 
-                    var tag = LightingGroupTagService.CreateGroupTag(doc, view, group);
+                    var tag = LightingTagService.CreateGroupTag(doc, view, group);
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
@@ -414,7 +410,7 @@ namespace AJ.LightingGroupTag.UI
                 return;
             }
 
-            var result = FixtureGroupValidator.Validate(fixtures, rep);
+            var result = FixtureValidationService.Validate(fixtures, rep);
             if (!result.IsValid)
             {
                 IsError = true;
@@ -460,8 +456,7 @@ namespace AJ.LightingGroupTag.UI
                 IsSuccess = false;
                 StatusMessage = errorMsg;
 
-                // Also display a prompt to the user if the tag family is missing
-                if (errorMsg.Contains(LightingGroupTagService.ExpectedTagFamilyName))
+                if (errorMsg.Contains(LightingTagService.ExpectedTagFamilyName))
                 {
                     TaskDialog.Show("AJ Lighting Group Tag", errorMsg);
                 }

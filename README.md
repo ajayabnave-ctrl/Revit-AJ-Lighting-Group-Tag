@@ -1,69 +1,165 @@
-# Revit-AJ-Lighting-Group-Tag — Revit 2026 Add-in
+# Revit-AJ-Lighting-Group-Tag
 
-Revit 2026 add-in for creating multi-reference lighting fixture group tags with one free representative leader. Built with C# and .NET 8 using the Revit API.
+A **Revit 2026 / .NET 8 Revit API add-in** that creates multi-reference lighting fixture tags with a single free representative leader:
 
-## Overview
-Standard Revit tagging tools often create multiple messy leaders when tagging a group of fixtures. **AJ Lighting Group Tag** provides a streamlined modeless workflow that:
-1. Groups identical lighting fixture types.
-2. Lets you pick all fixtures in the group.
-3. Lets you designate one **representative fixture**.
-4. Automatically generates a native multi-reference `IndependentTag` where:
-   - **Only the representative fixture has a visible leader**.
-   - All other fixture leaders are hidden.
-   - Leader End Condition is set to **Free End** so the endpoint can be repositioned independently.
-5. Strictly enforces the `AJ_Lighting_Group_Tag` tag family without silent substitution.
+```text
+Fixture ─────────────────► (4) EL_01
+                                  │
+                                  │
+                                  ▼
+                           Representative
+```
 
 ## Features
-- **Modeless WPF UI**: Clean BIM dark theme that remains open while allowing full navigation and interaction inside Revit.
-- **Thread-Safe Architecture**: Uses `IExternalEventHandler` to safely dispatch selection and transaction operations to the Revit main thread.
-- **Interactive Picking**:
-  - `[ PICK FIXTURES ]`: Select fixtures in the Revit viewport.
-  - `[ PICK REPRESENTATIVE ]`: Select or choose which fixture hosts the leader.
-- **Comprehensive Validation**:
-  - Validates `OST_LightingFixtures` category.
-  - Ensures all fixtures belong to the same Family Type (`FamilySymbol`).
-  - Ensures representative fixture is a member of the group.
-- **One-Click Deploy**: Includes `deploy.bat` to compile and copy directly to `%APPDATA%\Autodesk\Revit\Addins\2026\`.
 
-## Project Structure
+* **Family/type-specific fixture selection**
+* **Sequential fixture picking**
+* **Multiple fixtures represented by one tag**
+* **Fixture count & Type Mark display**
+* **User-selected representative fixture**
+* **One visible leader only** (attached directly to representative fixture)
+* **Free leader end** for flexible annotation positioning
+* **Plan, Elevation, and Section view support**
+* **Modeless WPF UI** with clean BIM dark theme
+* Built for **Autodesk Revit 2026 API** on **.NET 8.0**
+
+---
+
+## Tool UI Design
+
 ```text
-├── AJ.LightingGroupTag.csproj        # .NET 8.0 WPF project
-├── AJ.LightingGroupTag.addin         # Revit manifest file
-├── App.cs                           # External Application (Ribbon Tab & Button)
-├── Commands/
-│   └── LaunchLightingGroupTagCommand.cs
-├── UI/
-│   ├── LightingGroupTagWindow.xaml  # Modeless WPF Dialog
-│   ├── LightingGroupTagViewModel.cs # MVVM ViewModel
-│   └── RelayCommand.cs
-├── Models/
-│   ├── LightingGroup.cs
-│   └── FixtureItemViewModel.cs
-├── Selection/
-│   ├── LightingFixtureSelectionFilter.cs
-│   ├── FixtureSelectionService.cs
-│   └── RepresentativeSelectionService.cs
-├── Validation/
-│   ├── FixtureGroupValidator.cs
-│   └── ValidationResult.cs
-├── Tags/
-│   └── LightingGroupTagService.cs
-├── Revit/
-│   ├── RevitElementService.cs
-│   └── RevitExternalEventHandler.cs
-└── Resources/
-    └── README_TAG_FAMILY.md
+┌────────────────────────────────────────┐
+│ AJ LIGHTING GROUP TAG                  │
+├────────────────────────────────────────┤
+│                                        │
+│ Fixture Type                           │
+│ [ AJ Lighting : EL_01             ▼ ] │
+│                                        │
+│ [ PICK FIXTURES ]                      │
+│                                        │
+│ Selected Fixtures: 4                   │
+│                                        │
+│  ✓ Fixture 001                         │
+│  ✓ Fixture 002                         │
+│  ✓ Fixture 003                         │
+│  ✓ Fixture 004                         │
+│                                        │
+│ [ PICK REPRESENTATIVE ]                │
+│                                        │
+│ Representative: Fixture 002           │
+│                                        │
+│ ─────────────────────────────────────  │
+│ Count:       4                         │
+│ Type Mark:   EL_01                     │
+│ Leader:      ONE                       │
+│ End:         FREE                      │
+│                                        │
+│ [ RESET ]              [ CREATE TAG ] │
+└────────────────────────────────────────┘
 ```
 
-## Requirements
-- Autodesk Revit 2026
-- .NET 8.0 SDK (Windows Desktop)
+---
+
+## Repository Structure
+
+```text
+Revit-AJ-Lighting-Group-Tag/
+│
+├── src/
+│   └── AJ.LightingGroupTag/
+│       │
+│       ├── App.cs
+│       ├── Commands/
+│       │   └── LightingGroupTagCommand.cs
+│       │
+│       ├── Models/
+│       │   ├── LightingGroup.cs
+│       │   └── FixtureItemViewModel.cs
+│       │
+│       ├── Services/
+│       │   └── LightingGroupTag/
+│       │       ├── FixtureTypeService.cs
+│       │       ├── FixtureSelectionService.cs
+│       │       ├── FixtureValidationService.cs
+│       │       ├── LightingTagService.cs
+│       │       └── RevitExternalEventHandler.cs
+│       │
+│       ├── UI/
+│       │   └── LightingGroupTag/
+│       │       ├── LightingGroupTagWindow.xaml
+│       │       ├── LightingGroupTagWindow.xaml.cs
+│       │       ├── LightingGroupTagViewModel.cs
+│       │       └── RelayCommand.cs
+│       │
+│       ├── AJ.LightingGroupTag.csproj
+│       └── AJ.LightingGroupTag.addin
+│
+├── resources/
+│   ├── AJ_Lighting_Group_Tag.rfa
+│   └── README.md
+│
+├── docs/
+│   ├── workflow.md
+│   └── architecture.md
+│
+├── deploy.bat
+├── .gitignore
+├── README.md
+└── LICENSE
+```
+
+---
+
+## Development Sequence
+
+```text
+01  Create repository
+          ↓
+02  Revit 2026 .NET 8 project
+          ↓
+03  Basic Revit command + ribbon
+          ↓
+04  WPF tool window
+          ↓
+05  Fixture Type picker
+          ↓
+06  Sequential fixture picker
+          ↓
+07  Fixture validation
+          ↓
+08  Representative picker
+          ↓
+09  LightingGroup data model
+          ↓
+10  Tag family detection
+          ↓
+11  Multi-reference tag creation
+          ↓
+12  ONE representative leader
+          ↓
+13  FREE leader end
+          ↓
+14  Plan / Elevation / Section testing
+          ↓
+15  Installer / deployment
+          ↓
+16  Documentation
+```
+
+---
+
+## Requirements & Building
+
+- **Autodesk Revit 2026**
+- **.NET 8.0 SDK** (Windows Desktop)
 - Revit tag family named `AJ_Lighting_Group_Tag` loaded in your project.
 
-## How to Build & Deploy
-Run `deploy.bat` or run:
+### Build and Deploy
+Run the included `deploy.bat` script, or run:
 ```cmd
-dotnet build AJ.LightingGroupTag.csproj -c Release
+dotnet build src\AJ.LightingGroupTag\AJ.LightingGroupTag.csproj -c Release
 ```
-Copy `bin\Release\AJ.LightingGroupTag.dll` and `AJ.LightingGroupTag.addin` into:
-`%APPDATA%\Autodesk\Revit\Addins\2026\`
+Copy `src\AJ.LightingGroupTag\bin\Release\AJ.LightingGroupTag.dll` and `src\AJ.LightingGroupTag\AJ.LightingGroupTag.addin` into:
+```text
+%APPDATA%\Autodesk\Revit\Addins\2026\
+```

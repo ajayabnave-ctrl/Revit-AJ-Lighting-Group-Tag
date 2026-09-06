@@ -2,8 +2,8 @@ using System;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using AJ.LightingGroupTag.Revit;
-using AJ.LightingGroupTag.UI;
+using AJ.LightingGroupTag.Services.LightingGroupTag;
+using AJ.LightingGroupTag.UI.LightingGroupTag;
 
 namespace AJ.LightingGroupTag.Commands
 {
@@ -12,7 +12,7 @@ namespace AJ.LightingGroupTag.Commands
     /// </summary>
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class LaunchLightingGroupTagCommand : IExternalCommand
+    public class LightingGroupTagCommand : IExternalCommand
     {
         private static LightingGroupTagWindow? _window;
         private static RevitExternalEventHandler? _eventHandler;

@@ -3,7 +3,7 @@ echo =======================================================
 echo Building AJ Lighting Group Tag for Revit 2026 (.NET 8)
 echo =======================================================
 
-dotnet build "%~dp0AJ.LightingGroupTag.csproj" -c Release
+dotnet build "%~dp0src\AJ.LightingGroupTag\AJ.LightingGroupTag.csproj" -c Release
 
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Build failed! Please check errors above.
@@ -22,8 +22,8 @@ if not exist "%REVIT_ADDIN_DIR%" (
     mkdir "%REVIT_ADDIN_DIR%"
 )
 
-copy /Y "%~dp0bin\Release\AJ.LightingGroupTag.dll" "%REVIT_ADDIN_DIR%\"
-copy /Y "%~dp0AJ.LightingGroupTag.addin" "%REVIT_ADDIN_DIR%\"
+copy /Y "%~dp0src\AJ.LightingGroupTag\bin\Release\AJ.LightingGroupTag.dll" "%REVIT_ADDIN_DIR%\"
+copy /Y "%~dp0src\AJ.LightingGroupTag\AJ.LightingGroupTag.addin" "%REVIT_ADDIN_DIR%\"
 
 echo.
 echo [SUCCESS] Add-in successfully built and deployed to:
