@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>AJ Lighting Group Tag Application</Name>
+    <Assembly>AJ.LightingGroupTag.dll</Assembly>
+    <AddInId>A4C157E0-1C77-4FE2-8D2A-E26BE839B1A0</AddInId>
+    <FullClassName>AJ.LightingGroupTag.App</FullClassName>
+    <VendorId>AJ_DEVELOPMENT</VendorId>
+    <VendorDescription>AJ Tools - Automated Lighting Group Tagging for Revit 2026</VendorDescription>
+  </AddIn>
+  <AddIn Type="Command">
+    <Name>AJ Lighting Group Tag Command</Name>
+    <Assembly>AJ.LightingGroupTag.dll</Assembly>
+    <AddInId>9BF2DF66-7F1D-417A-B14C-E8B1E343A11C</AddInId>
+    <FullClassName>AJ.LightingGroupTag.Commands.LaunchLightingGroupTagCommand</FullClassName>
+    <Text>AJ Lighting Group Tag</Text>
+    <Description>Creates multi-reference lighting fixture group tags with single visible leader</Description>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+    <VendorId>AJ_DEVELOPMENT</VendorId>
+    <VendorDescription>AJ Tools - Automated Lighting Group Tagging for Revit 2026</VendorDescription>
+  </AddIn>
+</RevitAddIns>

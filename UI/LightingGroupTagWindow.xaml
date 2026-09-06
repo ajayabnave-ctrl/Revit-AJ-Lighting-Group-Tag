@@ -1,0 +1,420 @@
+<Window x:Class="AJ.LightingGroupTag.UI.LightingGroupTagWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:AJ.LightingGroupTag.Models"
+        mc:Ignorable="d"
+        Title="AJ Lighting Group Tag"
+        Height="780" Width="460"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        Topmost="True">
+
+    <Window.Resources>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="BgBrush" Color="#12151D"/>
+        <SolidColorBrush x:Key="HeaderBrush" Color="#1A1F2C"/>
+        <SolidColorBrush x:Key="CardBrush" Color="#1D2332"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#2A3347"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F1F5F9"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#94A3B8"/>
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B"/>
+        <SolidColorBrush x:Key="PrimaryAccentBrush" Color="#3B82F6"/>
+        <SolidColorBrush x:Key="PrimaryAccentHoverBrush" Color="#2563EB"/>
+        <SolidColorBrush x:Key="SuccessBrush" Color="#10B981"/>
+        <SolidColorBrush x:Key="WarningBrush" Color="#F59E0B"/>
+        <SolidColorBrush x:Key="ErrorBrush" Color="#EF4444"/>
+
+        <!-- Boolean to Visibility Converter -->
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#252F43"/>
+            <Setter Property="Foreground" Value="#F8FAFC"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="14,9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#3B4864"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#475569"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E293B"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Action Button Style -->
+        <Style x:Key="PrimaryActionButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="BorderBrush" Value="#3B82F6"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1D4ED8"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#60A5FA"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E40AF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#475569"/>
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Window Control Button Style -->
+        <Style x:Key="WindowControlBtn" TargetType="Button">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#2A3347"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WindowCloseBtn" TargetType="Button" BasedOn="{StaticResource WindowControlBtn}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#DC2626"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Main Container with Shadow and Border -->
+    <Border Background="{StaticResource BgBrush}"
+            BorderBrush="{StaticResource CardBorderBrush}"
+            BorderThickness="1.5"
+            CornerRadius="12"
+            ClipToBounds="True">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Custom Title Bar -->
+                <RowDefinition Height="*"/>    <!-- Scrollable Content -->
+                <RowDefinition Height="Auto"/> <!-- Status & Action Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. CUSTOM TITLE BAR -->
+            <Border Grid.Row="0" Background="{StaticResource HeaderBrush}"
+                    BorderBrush="{StaticResource CardBorderBrush}"
+                    BorderThickness="0,0,0,1"
+                    Padding="16,12"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- App Icon / Tag Graphic -->
+                    <Border Grid.Column="0" Width="26" Height="26" CornerRadius="6" Background="#2563EB" Margin="0,0,10,0">
+                        <TextBlock Text="LT" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="AJ Lighting Group Tag" Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontWeight="Bold" FontSize="14" FontFamily="Segoe UI"/>
+                        <TextBlock Text="Revit 2026 Multi-Reference Tagging" Foreground="{StaticResource TextMutedBrush}"
+                                   FontSize="11" FontFamily="Segoe UI"/>
+                    </StackPanel>
+
+                    <!-- Minimize and Close Buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Button Style="{StaticResource WindowControlBtn}" Content="—" Click="MinimizeButton_Click" ToolTip="Minimize"/>
+                        <Button Style="{StaticResource WindowCloseBtn}" Content="✕" Click="CloseButton_Click" ToolTip="Close"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 2. SCROLLABLE WORKFLOW CONTENT -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="18,14">
+
+                    <!-- SECTION: FIXTURE TYPE -->
+                    <Border Background="{StaticResource CardBrush}"
+                            BorderBrush="{StaticResource CardBorderBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,8">
+                                <TextBlock Text="FIXTURE TYPE" FontWeight="Bold" FontSize="11"
+                                           Foreground="{StaticResource TextSecondaryBrush}" DockPanel.Dock="Left"/>
+                                <Button Content="↻ Refresh" Style="{StaticResource ModernButton}"
+                                        Command="{Binding RefreshTypesCommand}"
+                                        Padding="6,2" FontSize="11" HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                            </DockPanel>
+
+                            <!-- Fixture Type ComboBox -->
+                            <ComboBox ItemsSource="{Binding AvailableTypes}"
+                                      SelectedItem="{Binding SelectedFixtureType}"
+                                      DisplayMemberPath="Name"
+                                      Padding="10,8" FontSize="13"
+                                      Background="#151923" Foreground="#F8FAFC"
+                                      BorderBrush="{StaticResource CardBorderBrush}"
+                                      Margin="0,0,0,10">
+                            </ComboBox>
+
+                            <!-- Available Types Summary Badges -->
+                            <TextBlock Text="Available Types in Project:" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,5"/>
+                            <ItemsControl ItemsSource="{Binding AvailableTypes}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#252D3F" CornerRadius="4" Padding="6,3" Margin="0,2,6,2">
+                                            <TextBlock Text="{Binding Name}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SECTION: STEP 1 — SELECT FIXTURES -->
+                    <Border Background="{StaticResource CardBrush}"
+                            BorderBrush="{StaticResource CardBorderBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="STEP 1 — SELECT FIXTURES" FontWeight="Bold" FontSize="11"
+                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10"/>
+
+                            <Button Content="[ PICK FIXTURES ]"
+                                    Style="{StaticResource ModernButton}"
+                                    Command="{Binding PickFixturesCommand}"
+                                    Margin="0,0,0,10"/>
+
+                            <DockPanel Margin="0,0,0,6">
+                                <TextBlock Text="Selected:" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding SelectedFixtureCount}" FontWeight="Bold" FontSize="12"
+                                           Foreground="{StaticResource PrimaryAccentBrush}" Margin="6,0,0,0"/>
+                            </DockPanel>
+
+                            <!-- Fixture Selection List -->
+                            <Border Background="#151923" BorderBrush="{StaticResource CardBorderBrush}"
+                                    BorderThickness="1" CornerRadius="6" MaxHeight="130">
+                                <ListBox ItemsSource="{Binding SelectedFixtures}"
+                                         SelectedItem="{Binding SelectedRepresentativeItem}"
+                                         Background="Transparent" BorderThickness="0"
+                                         Foreground="{StaticResource TextPrimaryBrush}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:FixtureItemViewModel}">
+                                            <DockPanel Margin="4,2">
+                                                <TextBlock Text="✓" Foreground="{StaticResource SuccessBrush}"
+                                                           FontWeight="Bold" Margin="0,0,8,0" DockPanel.Dock="Left"/>
+                                                <TextBlock Text="{Binding DisplayName}" FontSize="12"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" DockPanel.Dock="Left"/>
+                                                <Border Background="#252E44" CornerRadius="3" Padding="5,1" Margin="8,0,0,0"
+                                                        DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                                    <TextBlock Text="{Binding TypeMark}" FontSize="11"
+                                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                </Border>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SECTION: STEP 2 — REPRESENTATIVE -->
+                    <Border Background="{StaticResource CardBrush}"
+                            BorderBrush="{StaticResource CardBorderBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="STEP 2 — REPRESENTATIVE FIXTURE" FontWeight="Bold" FontSize="11"
+                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,10,0"/>
+                            <TextBlock Text="Leader will attach directly to this fixture with Free End control."
+                                       FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,10"/>
+
+                            <Button Content="[ PICK REPRESENTATIVE ]"
+                                    Style="{StaticResource ModernButton}"
+                                    Command="{Binding PickRepresentativeCommand}"
+                                    Margin="0,0,0,8"/>
+
+                            <DockPanel>
+                                <TextBlock Text="Representative:" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding LeaderTargetText}" FontWeight="Bold" FontSize="12"
+                                           Foreground="{StaticResource SuccessBrush}" Margin="6,0,0,0"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- SECTION: GROUP INFORMATION -->
+                    <Border Background="{StaticResource CardBrush}"
+                            BorderBrush="{StaticResource CardBorderBrush}"
+                            BorderThickness="1" CornerRadius="8" Padding="14">
+                        <StackPanel>
+                            <TextBlock Text="GROUP INFORMATION" FontWeight="Bold" FontSize="11"
+                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,10"/>
+
+                            <Grid Margin="0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Type Mark:" FontSize="12" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding TypeMarkText}" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </Grid>
+
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Number of Fixtures:" FontSize="12" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding NumberOfFixturesText}" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </Grid>
+
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Leader:" FontSize="12" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding LeaderText}" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </Grid>
+
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Leader Target:" FontSize="12" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding LeaderTargetText}" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </Grid>
+
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Leader End:" FontSize="12" Foreground="{StaticResource TextMutedBrush}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding LeaderEndText}" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 3. STATUS BANNER & ACTION FOOTER -->
+            <Border Grid.Row="2" Background="{StaticResource HeaderBrush}"
+                    BorderBrush="{StaticResource CardBorderBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="16,12">
+                <StackPanel>
+                    <!-- Status Notification Banner -->
+                    <Border CornerRadius="6" Padding="10,8" Margin="0,0,0,12" Background="#1D2433">
+                        <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" FontSize="11" LineHeight="16">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#94A3B8"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsError}" Value="True">
+                                            <Setter Property="Foreground" Value="#F87171"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSuccess}" Value="True">
+                                            <Setter Property="Foreground" Value="#34D399"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+
+                    <!-- Bottom Action Buttons -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Content="[ RESET ]"
+                                Style="{StaticResource ModernButton}"
+                                Command="{Binding ResetCommand}"
+                                Width="100"/>
+
+                        <Button Grid.Column="2" Content="[ CREATE TAG ]"
+                                Style="{StaticResource PrimaryActionButton}"
+                                Command="{Binding CreateTagCommand}"
+                                Width="140"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
